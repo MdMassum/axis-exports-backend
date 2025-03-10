@@ -1,6 +1,23 @@
 const express = require('express')
+const cors = require('cors')
+
+
 const app = express();
 const bodyparser = require('body-parser');
+app.use(cors({
+    // origin:'*',     // frontend url
+    origin:'http://localhost:5173',
+    methods: ["GET", "POST", "DELETE", "PUT"],
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Cache-Control",
+        "Expires",
+        "Pragma",
+      ],
+    credentials: true
+}))
+
 const errorMiddleware = require('./middleware/error')
 
 // route imports
