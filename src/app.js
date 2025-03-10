@@ -5,7 +5,7 @@ const cors = require('cors')
 const app = express();
 const bodyparser = require('body-parser');
 app.use(cors({
-    // origin:'*',     // frontend url
+    // origin:'https://axis-exports.vercel.app',     // frontend url
     origin:'http://localhost:5173',
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
