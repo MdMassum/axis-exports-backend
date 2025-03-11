@@ -1,6 +1,6 @@
 const app = require('./app.js')
 const ConnectToMongo = require('./config/db.js')
-const dotenv = require('dotenv')
+
 
 // handling uncaught exception
 process.on("uncaughtException",()=>{
@@ -12,8 +12,6 @@ process.on("uncaughtException",()=>{
     })
 })
 
-// config
-dotenv.config();
 const port = process.env.PORT;
 
 // connecting to database
