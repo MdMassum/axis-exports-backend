@@ -19,27 +19,18 @@ const productSchema = new mongoose.Schema({
         type:Number,
         default:0,
     },
-    images:[
-        {
-            public_id:{
-                type:String,
-                required:true
-            },
-            url:{
-                type:String,
-                required:true
-            }
-        }
-    ],
+    images:{
+        type:[String],
+    },
     category:{
         type:String,
-        required:[true,"Please Enter Product category"]
+        // required:[true,"Please Enter Product category"]
     },
     stock:{
         type:Number,
         required:[true,"Please Enter Product category"],
         maxLength:[4,"Stock cannot Exceed 4 digits"],
-        default:1
+        default:10
     },
     numOfReviews:{
         type:Number,
@@ -69,11 +60,7 @@ const productSchema = new mongoose.Schema({
     user:{  // this store the user who will create the particular product or map
         type:mongoose.Schema.ObjectId,
         ref : "User",
-        required:true,
-    },
-    createdAt:{
-        type:Date,
-        default:Date.now()
+        // required:true,
     }
-})
+},{timestamps:true})
 module.exports = mongoose.model('Product',productSchema)

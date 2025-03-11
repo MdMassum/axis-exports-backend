@@ -3,13 +3,47 @@ const Errorhandler = require('../utils/errorhander')
 const catchAsyncError = require('../middleware/catchAsyncErrors')
 const ApiFeatures = require('../utils/apiFeatures')
 
-// for creating product  -- Admin -->
+
+export const createProduct = async (req, res) => {
+    const { name, description, price } = req.body;
+    const images = req.files ? req.files.map(file => file.path) : [];
+
+    if (!name || !description || !price || images.length === 0) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'All fields are required including at least one image.'
+        });
+    }
+
+    try {
+        const product = await Product.create({ name, description, price, images });
+        res.status(201).json({ success: true, product });
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error creating product', 
+            error: error.message 
+        });
+    }
+};
+
 exports.createProduct = catchAsyncError(async(req,res) =>{
 
     // assigning value of req.body.user as the id of loggedin user (i.e id of logged in user will be req.user.id)
-    req.body.user = req.user.id;
+    user = req.user.id;
+    const { name, description, price } = req.body;
+    const images = req.files ? req.files.map(file => file.path) : [];
+
+    if (!name || !description || !price) {
+        return res.status(400).json({ 
+            success: false, 
+            message: 'All fields are required including at least one image.'
+        });
+    }
     
-    let product = await Product.create(req.body)
+
+    const product = await Product.create({ name, description, price, images, user});
+
     res.status(201).json({
         success:true,
         product

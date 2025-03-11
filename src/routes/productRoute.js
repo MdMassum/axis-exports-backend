@@ -2,9 +2,10 @@ const express = require('express');
 const {getAllProducts, createProduct, updateProduct, deleteProduct, getProductDetails, createProductReview, getProductReviews, deleteReview} = require('../controllers/productController');
 const { isAuthenticatedUser, authorizeRoles } = require('../middleware/auth');
 const router = express.Router();
+const upload = require('../middleware/upload')
 
 // create product --> Admin access
-router.post('/product/new',isAuthenticatedUser,authorizeRoles("admin"),createProduct)
+router.post('/product/new',isAuthenticatedUser,authorizeRoles("admin"),upload.array('images',5),createProduct)
 
 // get single Product details
 router.get('/product/:id',getProductDetails);
