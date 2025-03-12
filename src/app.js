@@ -1,7 +1,15 @@
 require("dotenv").config();
+
+const errorMiddleware = require('./middleware/error')
+const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
 
+// route imports
+const products = require("../src/routes/productRoute")
+const users = require("../src/routes/userRoute")
+const order = require('../src/routes/orderRoute')
+const contact = require('../src/routes/contactRoute')
 
 const app = express();
 const bodyparser = require('body-parser');
@@ -19,25 +27,16 @@ app.use(cors({
     credentials: true
 }))
 
-const errorMiddleware = require('./middleware/error')
-
-// route imports
-const products = require("../src/routes/productRoute")
-const users = require("../src/routes/userRoute")
-const order = require('../src/routes/orderRoute')
-
-const cookieParser = require('cookie-parser')
-
 // to access req.body
 app.use(bodyparser.json()); 
 app.use(express.json());
 app.use(cookieParser());
 
-
 //available routes
 app.use('/api/v1',products);
 app.use('/api/v1',users);
 app.use('/api/v1',order);
+app.use('/api/v1',contact);
 
 // middleware for errors
 app.use(errorMiddleware)
