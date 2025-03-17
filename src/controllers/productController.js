@@ -7,7 +7,7 @@ exports.createProduct = catchAsyncError(async(req,res) =>{
 
     // assigning value of req.body.user as the id of loggedin user (i.e id of logged in user will be req.user.id)
     user = req.user.id;
-    const { name, description, price } = req.body;
+    const { name, description, price, stock } = req.body;
 
     const images = req.files ? req.files.map((file) => file.path) : [];
 
@@ -18,7 +18,7 @@ exports.createProduct = catchAsyncError(async(req,res) =>{
         });
     }
 
-    const product = await Product.create({ name, description, price, user, images});
+    const product = await Product.create({ name, description, price, user, images, stock});
 
     res.status(201).json({
         success:true,
