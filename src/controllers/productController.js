@@ -2,6 +2,7 @@ const Product = require('../models/productModel')
 const Errorhandler = require('../utils/errorhander')
 const catchAsyncError = require('../middleware/catchAsyncErrors')
 const ApiFeatures = require('../utils/apiFeatures')
+const cloudinary = require('../config/cloudinary')
 
 exports.createProduct = catchAsyncError(async(req,res) =>{
 
@@ -82,20 +83,37 @@ exports.updateProduct = catchAsyncError(
 })
 
 // Delete the product - Admin -->
-exports.deleteProduct=catchAsyncError(async(req,res)=>{
+exports.deleteProduct = catchAsyncError(async (req, res) => {
+    const product = await Product.findById(req.params.id);
 
-    let product = await Product.findById(req.params.id);
-
-    if(!product){
-        return res.status(500).json({
-            success:false,
-            message:"Product not found"})
+    if (!product) {
+        return res.status(404).json({
+            success: false,
+            message: "Product not found"
+        });
     }
+
+    // Delete images from Cloudinary
+    if (product.images && product.images.length > 0) {
+        const deletePromises = product.images.map(async (imageUrl) => {
+
+            // Extracting public_id from the Cloudinary URL
+            const publicId = imageUrl.split('/').pop().split('.')[0];
+            await cloudinary.uploader.destroy(`social_media_task/${publicId}`);
+
+        });
+
+        await Promise.all(deletePromises);
+    }
+
     await Product.findByIdAndDelete(req.params.id);
-    return res.status(200).json({
-        success:true,
-        message:"Product Deleted Successfully"})
-})
+
+    res.status(200).json({
+        success: true,
+        message: "Product Deleted Successfully"
+    });
+});
+
 
 // creating & updating review -->
 exports.createProductReview = catchAsyncError(async(req,res,next)=>{
