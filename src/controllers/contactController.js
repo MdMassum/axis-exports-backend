@@ -19,20 +19,37 @@ exports.createContact = catchAsyncError(async(req,res) =>{
 exports.getAllContact = catchAsyncError(async(req,res) =>{
 
     // const resultPerPage = 20;
-    const totalCount = await Contact.countDocuments();
+    // const totalCount = await Contact.countDocuments();
+    const { startDate, endDate } = req.query;
+    let filter = {};
 
-    const apiFeatures = new ApiFeatures(Contact.find(),req.query)
-    .search()     // search function
-    .filter()     // filter function
+    if (startDate && endDate) {
+        filter.createdAt = {
+          $gte: new Date(startDate),
+          $lte: new Date(new Date(endDate).setHours(23, 59, 59, 999)),
+        };
+    }
+
+    try {
+        const contacts = await Contact.find(filter).sort({ createdAt: -1 });
+        res.status(200).json({ success: true, contacts });
+    } catch (error) {
+        console.error("Error fetching contacts:", error);
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
+
+    // const apiFeatures = new ApiFeatures(Contact.find(),req.query)
+    // .search()     // search function
+    // .filter()     // filter function
     // .pagination(resultPerPage);    // total result to show in 1 page
 
-    const contacts = await apiFeatures.query;
+    // const contacts = await apiFeatures.query;
 
-    res.status(200).json({
-        success:true,
-        contacts,
-        totalCount
-    });
+    // res.status(200).json({
+    //     success:true,
+    //     contacts,
+    //     totalCount
+    // });
 })
 
 
