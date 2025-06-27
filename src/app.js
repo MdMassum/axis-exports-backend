@@ -14,8 +14,8 @@ const contact = require('../src/routes/contactRoute')
 const app = express();
 const bodyparser = require('body-parser');
 app.use(cors({
-    origin:'https://axis-exports.vercel.app',     // frontend url
-    // origin:'http://localhost:5173',
+    // origin:'https://axis-exports.vercel.app',     // frontend url
+    origin:'http://localhost:5173' || 'https://axis-exports.vercel.app' || 'https://www.axisinternationalexports.com',
     methods: ["GET", "POST", "DELETE", "PUT"],
     allowedHeaders: [
         "Content-Type",
